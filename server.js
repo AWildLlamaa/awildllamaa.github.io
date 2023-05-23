@@ -1,4 +1,6 @@
 const express = require('express');
+const OAuth = require('oauth-1.0a');
+const crypto = require('crypto');
 const fetch = require('node-fetch');
 
 const app = express();
@@ -13,23 +15,29 @@ app.get('/likes/:username', async (req, res) => {
   const accessTokenSecret = '4gfe29e8hSf1r2PjqKeWwL2dTaDU7xwQrUFIPEFVUZ6Zv';
 
   // Set up OAuth1.0a authentication
-  const oauth = {
-    consumer_key: apiKey,
-    consumer_secret: apiSecret,
-    token: accessToken,
-    token_secret: accessTokenSecret,
+  const oauth = OAuth({
+    consumer: { key: apiKey, secret: apiSecret },
+    signature_method: 'HMAC-SHA1',
+    hash_function: (baseString, key) => crypto.createHmac('sha1', key).update(baseString).digest('base64')
+  });
+
+  const requestData = {
+    url: `https://api.twitter.com/1.1/favorites/list.json?screen_name=${username}`,
+    method: 'GET'
   };
 
-  // Encode OAuth1.0a parameters
-  const encodedParams = encodeURIComponent(JSON.stringify(oauth));
+  const token = {
+    key: accessToken,
+    secret: accessTokenSecret
+  };
+
+  const requestOptions = {
+    headers: oauth.toHeader(oauth.authorize(requestData, token))
+  };
 
   try {
     // Make a request to fetch the likes using the Twitter API
-    const response = await fetch(`https://api.twitter.com/1.1/favorites/list.json?screen_name=${username}`, {
-      headers: {
-        'Authorization': `Bearer ${encodedParams}`
-      }
-    });
+    const response = await fetch(requestData.url, requestOptions);
 
     if (!response.ok) {
       throw new Error('Failed to fetch likes');
