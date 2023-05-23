@@ -1,4 +1,0 @@
-apiKey - i4wpQCijxC2f8pl2tY0O0ERAK
-apiSecret - IBkYzXlRgKyOrVp0php1NhwR8GHCMpMtOs3TZtXdE3zpuXveE6
-accessT - 1586804888289296389-VWw6t438vq3QjzQgtAbbgaIS1MHBnO
-aceesTSecret - 4gfe29e8hSf1r2PjqKeWwL2dTaDU7xwQrUFIPEFVUZ6Zv
