@@ -21,8 +21,7 @@ function displayCard(data) {
 
 // Function to ask a question to ChatGPT API
 async function askQuestion(question) {
-  // Replace 'YOUR_CHATGPT_API_KEY' with your actual ChatGPT API key
-  const chatGptApiKey = 'YOUR_CHATGPT_API_KEY';
+  const chatGptApiKey = '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';
 
   // Rest of the askQuestion function remains the same
 }
@@ -36,7 +35,9 @@ async function handleQuestion() {
   attempts++;
 
   // Ask the question to ChatGPT API
+  console.log(`Asking question: ${userInput}`);
   const response = await askQuestion(userInput);
+  console.log(`Received response: ${response}`);
 
   // Display the response to the user
   const responseDiv = document.getElementById('response');
