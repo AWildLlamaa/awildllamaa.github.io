@@ -25,7 +25,7 @@ async function askQuestion(question) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            question: `Given a Magic card named "${cardData.name}" with attributes like color identity and type, answer this: ${question}?`,
+            question: `Given the information about the Magic the Gathering card "${cardData.name}" with attributes like color identity and type, answer this question about the card with either "Yes", "No", or "I didn't quite understand that. Please ask again.": ${question}?`,
         }),
       });
       
