@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv-browserify').config();
 let cardData;
 let attempts = 0;
 
