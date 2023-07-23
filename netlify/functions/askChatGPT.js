@@ -34,6 +34,7 @@ exports.handler = async function(event, context) {
 
     const question = payload.question;
     const apiKey = process.env.CHATGPT_API_KEY;
+    const validAnswers = ["Yes", "No", "I Don't Know", "Please Ask Again"];
 
     try {
         const response = await fetch(`https://api.openai.com/v1/engines/davinci/completions`, {
@@ -54,17 +55,18 @@ exports.handler = async function(event, context) {
         }        
 
         const data = await response.json();
+        const answer = data.choices[0].text.trim();
 
-        if (!data.choices || !data.choices[0] || !data.choices[0].text) {
+        if (!validAnswers.includes(answer)) {
             return {
                 statusCode: 500,
-                body: `Unexpected response format from the OpenAI API.`,
+                body: `Received unexpected answer from OpenAI: ${answer}. Please ask again.`,
             };
         }
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ answer: data.choices[0].text.trim() }),
+            body: JSON.stringify({ answer: answer }),
         };
     } catch (error) {
         return {
