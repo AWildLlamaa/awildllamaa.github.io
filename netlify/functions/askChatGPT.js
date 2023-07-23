@@ -36,7 +36,7 @@ exports.handler = async function(event, context) {
     const apiKey = process.env.CHATGPT_API_KEY;
 
     try {
-        const response = await fetch(`https://api.openai.com/v1/engines/davinci/completions`,
+        const response = await fetch(`https://api.openai.com/v1/engines/davinci/completions`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
