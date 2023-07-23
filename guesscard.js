@@ -56,32 +56,33 @@ async function askQuestion(question) {
       console.error('Error fetching response from ChatGPT API:', error);
       throw error;
     }
-  }  
-  
-  async function handleQuestion() {
+}  
+
+
+async function handleQuestion() {
     const userInput = document.getElementById('userInput').value.trim();
     if (!userInput) return;
-  
+
     document.getElementById('userInput').value = '';
     attempts++;
-  
+
     console.log(`Asking question: ${userInput}`);
     try {
-      const response = await askQuestion(userInput);
-      console.log(`Received response: ${response}`);
-  
-      const responseDiv = document.getElementById('response');
-      responseDiv.innerHTML = `Response: ${response}`;
-  
-      if (response === "Yes" || response === "No") {
+        const response = await askQuestion(userInput);
+        console.log(`Received response: ${response}`);
+
+        const responseDiv = document.getElementById('response');
+        responseDiv.innerHTML = `Response: ${response}`;
+
+        if (response === "Yes" || response === "No") {
         responseDiv.innerHTML += `<br>Correct! You guessed the card "${cardData.name}" in ${attempts} attempts.`;
         attempts = 0;
         getRandomCard();
-      }
+        }
     } catch (error) {
-      console.error('Error handling question:', error);
+        console.error('Error handling question:', error);
     }
-  }
+}
 
 document.getElementById('askButton').addEventListener('click', handleQuestion);
 getRandomCard();
