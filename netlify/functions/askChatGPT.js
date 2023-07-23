@@ -53,7 +53,6 @@ exports.handler = async function(event, context) {
                 prompt: question,
                 max_tokens: 50,
                 temperature: 0.5,
-                stop_sequences: ["Yes", "No", "I don't know"]
             }),
         });
 
