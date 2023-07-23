@@ -19,7 +19,7 @@ function displayCard(data) {
 
 async function askQuestion(question) {
   try {
-    const prompt = `There is a Magic the Gathering card named "${cardData.name}", which has attributes like a color identity of "${cardData.color_identity}" and type of "${cardData.type_line}". ${question}? Answer with "Yes", "No", or "I don't know" only.`;
+    const prompt = `Given a Magic the Gathering card named "${cardData.name}" with a color identity of "${cardData.color_identity}" and type "${cardData.type_line}", ${question}?`;
     
     const response = await fetch('/.netlify/functions/askChatGPT', {
       method: 'POST',
