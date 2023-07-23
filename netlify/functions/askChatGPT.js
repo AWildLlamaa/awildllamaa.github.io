@@ -11,7 +11,7 @@ exports.handler = async function(event, context) {
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
-            body: 'Method Not Allowed',
+            body: JSON.stringify({ message: 'Method Not Allowed' }),
         };
     }
 
@@ -21,14 +21,14 @@ exports.handler = async function(event, context) {
     } catch (e) {
         return {
             statusCode: 400,
-            body: 'Invalid JSON payload received.',
+            body: JSON.stringify({ message: 'Invalid JSON payload received.' }),
         };
     }
 
     if (!payload || !payload.question) {
         return {
             statusCode: 400,
-            body: 'Payload must contain a "question" property.',
+            body: JSON.stringify({ message: 'Payload must contain a "question" property.' }),
         };
     }
 
@@ -50,9 +50,17 @@ exports.handler = async function(event, context) {
             }),
         });
 
+        if (!response.ok) {
+            throw new Error(`OpenAI API call failed with status: ${response.status}`);
+        }
+
         const data = await response.json();
+
+        if (!data.choices || data.choices.length === 0) {
+            throw new Error("No choices returned from OpenAI API.");
+        }
+
         const answer = data.choices[0].text.trim();
-        console.log(data);
 
         return {
             statusCode: 200,
@@ -61,7 +69,7 @@ exports.handler = async function(event, context) {
     } catch (error) {
         return {
             statusCode: 500,
-            body: `Error processing the request: ${error.message}`,
+            body: JSON.stringify({ message: `Error processing the request: ${error.message}` }),
         };
     }
 };
