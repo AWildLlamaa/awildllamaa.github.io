@@ -43,9 +43,8 @@ exports.handler = async function(event, context) {
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                messages: [
-                    { "role": "user", "content": question }
-                ]
+                prompt: question,
+                max_tokens: 150,
             }),
         });
 
@@ -58,7 +57,7 @@ exports.handler = async function(event, context) {
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ answer: data.choices[0].message.content.trim() }), // Updated key path
+            body: JSON.stringify({ answer: data.choices[0].text.trim() }), // Keep it as `text` for this API call
         };
     } catch (error) {
         return {
