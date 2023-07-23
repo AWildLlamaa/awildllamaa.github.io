@@ -50,7 +50,7 @@ exports.handler = async function(event, context) {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(`OpenAI API error: ${errorData.error || response.statusText}`);
+            throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
         }        
 
         const data = await response.json();
