@@ -40,9 +40,10 @@ async function askQuestion(question) {
     }
 
     const data = JSON.parse(responseBody);
-    const answer = data.answer.trim();
-
+    let answer = data.answer.trim();
+    answer = answer.split(' ').pop();  // Extract the last word
     return answer;
+
   } catch (error) {
     console.error('Error fetching response from ChatGPT API:', error);
     throw error;
