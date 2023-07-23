@@ -58,13 +58,6 @@ exports.handler = async function(event, context) {
         const data = await response.json();
         const answer = data.choices[0].text.trim();
 
-        if (!validAnswers.includes(answer)) {
-            return {
-                statusCode: 500,
-                body: `Received unexpected answer from OpenAI: ${answer}. Please ask again.`,
-            };
-        }
-
         return {
             statusCode: 200,
             body: JSON.stringify({ answer: answer }),
