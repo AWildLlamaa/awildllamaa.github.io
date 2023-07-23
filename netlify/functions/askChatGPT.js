@@ -11,7 +11,7 @@ exports.handler = async function(event, context) {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      body: 'Method Not Allowed',
+      body: JSON.stringify({error: 'Method Not Allowed'}),
     };
   }
 
@@ -21,14 +21,14 @@ exports.handler = async function(event, context) {
   } catch (e) {
     return {
       statusCode: 400,
-      body: 'Invalid JSON payload received.',
+      body: JSON.stringify({error: 'Invalid JSON payload received.'}),
     };
   }
 
   if (!payload || !payload.question) {
     return {
       statusCode: 400,
-      body: 'Payload must contain a "question" property.',
+      body: JSON.stringify({error: 'Payload must contain a "question" property.'}),
     };
   }
 
@@ -71,9 +71,10 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({ answer: answer }),
     };
   } catch (error) {
+    console.error('Error in lambda function:', error);
     return {
       statusCode: 500,
-      body: `Error processing the request: ${error.message}`,
+      body: JSON.stringify({error: `Error processing the request: ${error.message}`}),
     };
   }
 };
