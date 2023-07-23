@@ -30,29 +30,28 @@ async function askQuestion(question) {
         body: JSON.stringify({ question }),
       });
       
+      const responseBody = await response.text();  // Read the body as text first
+      
       // Check if response is OK (status code 2xx)
       if (!response.ok) {
-        // Try to parse the response as JSON
+        // Try to parse the responseBody as JSON
         try {
-          const errorData = await response.json();
+          const errorData = JSON.parse(responseBody);
           console.error('Error from server:', errorData);
         } catch (jsonError) {
-          // If parsing failed, just get the text
-          const errorText = await response.text();
-          console.error('Error from server (non-JSON response):', errorText);
+          // If parsing failed, just log the text
+          console.error('Error from server (non-JSON response):', responseBody);
         }
         throw new Error('Server error');
       }
   
-      const data = await response.json();
+      const data = JSON.parse(responseBody);  // Parse the responseBody for the successful case
       return data.answer;
     } catch (error) {
       console.error('Error fetching response from ChatGPT API:', error);
       throw error;  // This will propagate the error to where askQuestion is called
     }
   }
-  
-
   
 
 // Function to handle user input and game flow
