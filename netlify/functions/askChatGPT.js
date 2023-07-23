@@ -32,8 +32,9 @@ exports.handler = async function(event, context) {
         };
     }
 
-    const question = payload.question;
+    const { question, cardData } = payload;
     const apiKey = process.env.CHATGPT_API_KEY;
+    const formattedPrompt = `Given the Magic card with details: Name - ${cardData.name}, Type - ${cardData.type_line}, Set - ${cardData.set_name}, Description - ${cardData.oracle_text}. User question: ${question}`;
 
     try {
         const response = await fetch(`https://api.openai.com/v1/engines/davinci/completions`, {
@@ -43,7 +44,7 @@ exports.handler = async function(event, context) {
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                prompt: question,
+                prompt: formattedPrompt,
                 max_tokens: 150,
             }),
         });
@@ -57,7 +58,7 @@ exports.handler = async function(event, context) {
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ answer: data.choices[0].text.trim() }), // Keep it as `text` for this API call
+            body: JSON.stringify({ answer: data.choices[0].text.trim() }),
         };
     } catch (error) {
         return {
