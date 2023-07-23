@@ -23,20 +23,35 @@ function displayCard(data) {
 async function askQuestion(question) {
     try {
       const response = await fetch('/.netlify/functions/askChatGPT', {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question: question })
+        body: JSON.stringify({ question }),
       });
+      
+      // Check if response is OK (status code 2xx)
+      if (!response.ok) {
+        // Try to parse the response as JSON
+        try {
+          const errorData = await response.json();
+          console.error('Error from server:', errorData);
+        } catch (jsonError) {
+          // If parsing failed, just get the text
+          const errorText = await response.text();
+          console.error('Error from server (non-JSON response):', errorText);
+        }
+        throw new Error('Server error');
+      }
   
       const data = await response.json();
-      return data.answer;  // Assuming your Netlify function sends the response as { answer: "Yes" or "No" }
+      return data.answer;
     } catch (error) {
-      console.error("Error fetching response from ChatGPT API:", error);
-      return "I'm sorry, I couldn't answer that question.";
+      console.error('Error fetching response from ChatGPT API:', error);
+      throw error;  // This will propagate the error to where askQuestion is called
     }
-}
+  }
+  
 
   
 
