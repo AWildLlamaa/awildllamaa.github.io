@@ -1,3 +1,4 @@
+require('dotenv').config();
 let cardData;
 let attempts = 0;
 
@@ -22,7 +23,7 @@ function displayCard(data) {
 // Function to ask a question to ChatGPT API
 async function askQuestion(question) {
     // Replace 'YOUR_CHATGPT_API_KEY' with your actual ChatGPT API key
-    const chatGptApiKey = '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';
+    const chatGptApiKey = process.env.CHATGPT_API_KEY;
   
     try {
       const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
