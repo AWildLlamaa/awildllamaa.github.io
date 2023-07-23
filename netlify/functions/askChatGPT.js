@@ -1,10 +1,13 @@
 let fetch;
-import('node-fetch').then(module => {
-    fetch = module.default;
-});
+if (typeof window === 'undefined') {
+    fetch = require('node-fetch');
+} else {
+    import('node-fetch').then(module => {
+        fetch = module.default;
+    });
+}
 
-
-exports.handler = async function (event, context) {
+exports.handler = async function(event, context) {
     if (event.httpMethod !== 'POST') {
         return {
             statusCode: 405,
@@ -12,9 +15,24 @@ exports.handler = async function (event, context) {
         };
     }
 
-    const payload = JSON.parse(event.body);
-    const question = payload.question;
+    let payload;
+    try {
+        payload = JSON.parse(event.body);
+    } catch (e) {
+        return {
+            statusCode: 400,
+            body: 'Invalid JSON payload received.',
+        };
+    }
 
+    if (!payload || !payload.question) {
+        return {
+            statusCode: 400,
+            body: 'Payload must contain a "question" property.',
+        };
+    }
+
+    const question = payload.question;
     const apiKey = process.env.CHATGPT_API_KEY;
 
     try {
@@ -30,6 +48,10 @@ exports.handler = async function (event, context) {
             }),
         });
 
+        if (!response.ok) {
+            throw new Error(`OpenAI API returned an error: ${response.statusText}`);
+        }
+
         const data = await response.json();
 
         return {
@@ -39,7 +61,7 @@ exports.handler = async function (event, context) {
     } catch (error) {
         return {
             statusCode: 500,
-            body: 'Error processing the request.',
+            body: `Error processing the request: ${error.message}`,
         };
     }
 };
