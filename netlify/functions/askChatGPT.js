@@ -49,8 +49,9 @@ exports.handler = async function(event, context) {
         });
 
         if (!response.ok) {
-            throw new Error(`OpenAI API returned an error: ${response.statusText}`);
-        }
+            const errorData = await response.json();
+            throw new Error(`OpenAI API error: ${errorData.error || response.statusText}`);
+        }        
 
         const data = await response.json();
 
