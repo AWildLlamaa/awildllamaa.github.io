@@ -12,17 +12,17 @@ async function getRandomCard() {
     console.error('Error fetching random card:', error);
   }
 }
-  
-  // Function to display the Magic card information
-  function displayCard(data) {
-    const cardImage = document.getElementById('cardImage');
-    cardImage.src = data.image_uris.normal;
-  }
+
+// Function to display the Magic card information
+function displayCard(data) {
+  const cardImage = document.getElementById('cardImage');
+  cardImage.src = data.image_uris.normal;
+}
 
 // Function to ask a question to ChatGPT API
 async function askQuestion(question) {
-    try {
-      const apiKey = '${{secrets.CHATGPT_API_KEY}}';
+  try {
+    const apiKey = '${{secrets.CHATGPT_API_KEY}}';
 
     const response = await fetch(
       `https://api.openai.com/v1/engines/davinci-codex/completions`,
