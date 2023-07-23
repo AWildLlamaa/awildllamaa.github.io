@@ -19,29 +19,44 @@ function displayCard(data) {
 
 async function askQuestion(question) {
     try {
+      const prompt = `Given the information about the Magic the Gathering card "${cardData.name}" with attributes like color identity "${cardData.color_identity}" and type "${cardData.type_line}", answer this question about the card with either "Yes", "No", or "I didn't quite understand that. Please ask again." In the case of "Yes" or "No", only reply with a one-word answer: ${question}?`;
+      
       const response = await fetch('/.netlify/functions/askChatGPT', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          question: `Given the information about the Magic the Gathering card "${cardData.name}" with attributes like color identity "${cardData.color_identity.join(', ')}" and type "${cardData.type_line}", answer 
-                    this question about the card with either "Yes", "No", or "I didn't quite understand that. Please ask again." In the case of "Yes" or "No", only reply with a one-word answer: ${question}?`,
+          question: prompt,
         }),
       });
   
+      const responseBody = await response.text();
+  
       if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(`Error from server: ${errorData}`);
+        try {
+          const errorData = JSON.parse(responseBody);
+          console.error('Error from server:', errorData);
+        } catch (jsonError) {
+          console.error('Error from server (non-JSON response):', responseBody);
+        }
+        throw new Error('Server error');
       }
   
-      const data = await response.json();
-      return data.answer;
+      const data = JSON.parse(responseBody);
+      const answer = data.answer.trim();
+  
+      const validAnswers = ["Yes", "No", "I Don't Know", "Please Ask Again"];
+      if (!validAnswers.includes(answer)) {
+        throw new Error('Received unexpected answer from OpenAI: ' + answer + '. Please ask again.');
+      }
+  
+      return answer;
     } catch (error) {
       console.error('Error fetching response from ChatGPT API:', error);
       throw error;
     }
-  }
+  }  
   
   async function handleQuestion() {
     const userInput = document.getElementById('userInput').value.trim();

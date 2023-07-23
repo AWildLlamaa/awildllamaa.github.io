@@ -46,7 +46,7 @@ exports.handler = async function(event, context) {
             body: JSON.stringify({
                 prompt: question,
                 max_tokens: 150,
-                temperature: 0.01
+                temperature: 0.10
             }),
         });
 
