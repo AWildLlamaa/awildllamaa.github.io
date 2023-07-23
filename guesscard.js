@@ -3,15 +3,15 @@ let attempts = 0;
 
 // Function to get a random Magic card from Scryfall API
 async function getRandomCard() {
-    try {
-      const response = await fetch('https://api.scryfall.com/cards/random');
-      const data = await response.json();
-      cardData = data;
-      displayCard(data);
-    } catch (error) {
-      console.error('Error fetching random card:', error);
-    }
+  try {
+    const response = await fetch('https://api.scryfall.com/cards/random');
+    const data = await response.json();
+    cardData = data;
+    displayCard(data); // Call the displayCard function to show the card image
+  } catch (error) {
+    console.error('Error fetching random card:', error);
   }
+}
   
   // Function to display the Magic card information
   function displayCard(data) {
@@ -21,8 +21,8 @@ async function getRandomCard() {
 
 // Function to ask a question to ChatGPT API
 async function askQuestion(question) {
-  try {
-    const apiKey = 'CHATGPT_API_KEY'; 
+    try {
+      const apiKey = '${{ secrets.CHATGPT_API_KEY }}';
 
     const response = await fetch(
       `https://api.openai.com/v1/engines/davinci-codex/completions`,
