@@ -45,15 +45,10 @@ exports.handler = async function(event, context) {
             },
             body: JSON.stringify({
                 prompt: question,
-                max_tokens: 10,
-                temperature: 0.7
+                max_tokens: 50,
+                temperature: 0.5
             }),
         });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(`OpenAI API error: ${JSON.stringify(errorData)}`);
-        }        
 
         const data = await response.json();
         const answer = data.choices[0].text.trim();
