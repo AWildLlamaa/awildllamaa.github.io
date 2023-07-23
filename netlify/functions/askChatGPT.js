@@ -43,6 +43,7 @@ exports.handler = async function(event, context) {
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
+                model: "davinci", // Add this line
                 prompt: question,
                 max_tokens: 150,
             }),
