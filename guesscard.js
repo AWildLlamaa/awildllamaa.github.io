@@ -1,4 +1,3 @@
-require('dotenv-browserify').config();
 let cardData;
 let attempts = 0;
 
@@ -22,37 +21,31 @@ function displayCard(data) {
 
 // Function to ask a question to ChatGPT API
 async function askQuestion(question) {
-    // Replace 'YOUR_CHATGPT_API_KEY' with your actual ChatGPT API key
-    const chatGptApiKey = process.env.CHATGPT_API_KEY;
-  
     try {
-      const response = await fetch('https://api.openai.com/v1/engines/davinci-codex/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${chatGptApiKey}`,
-        },
-        body: JSON.stringify({
-          'prompt': `You are playing a game of 20 Questions to guess a Magic card. Is the card ${question}?`,
-          'temperature': 0.7,
-          'max_tokens': 100,
-          'stop': '\n',
-        }),
-      });
+      const apiKey = process.env.CHATGPT_API_KEY; // This line is not required anymore
   
-      // Check if the response status is 404 (Not Found)
-      if (response.status === 404) {
-        throw new Error('API endpoint not found. Please check the API URL.');
-      }
+      const response = await fetch(
+        `https://api.openai.com/v1/engines/davinci-codex/completions`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`, // Use the GitHub secret here
+          },
+          body: JSON.stringify({
+            prompt: question,
+            max_tokens: 150,
+          }),
+        }
+      );
   
       const data = await response.json();
-      const answer = data.choices[0]?.text.trim(); // Use optional chaining to handle possible undefined response
-      return answer || "I'm sorry, I couldn't answer that question.";
+      return data.choices[0].text.trim();
     } catch (error) {
-      console.error('Error fetching response from ChatGPT API:', error);
+      console.error("Error fetching response from ChatGPT API:", error);
       return "I'm sorry, I couldn't answer that question.";
     }
-  }
+  }  
   
 
 // Function to handle user input and game flow
