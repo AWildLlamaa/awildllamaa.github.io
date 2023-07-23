@@ -1,13 +1,12 @@
 let cardData;
 let attempts = 0;
 
-// Function to get a random Magic card from Scryfall API
 async function getRandomCard() {
   try {
     const response = await fetch('https://api.scryfall.com/cards/random');
     const data = await response.json();
     cardData = data;
-    displayCard(data); 
+    displayCard(data);
   } catch (error) {
     console.error('Error fetching random card:', error);
   }
@@ -25,7 +24,9 @@ async function askQuestion(question) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ question, cardData }), // Send cardData to the server as well
+        body: JSON.stringify({
+            question: `Is the card's color identity ${question}? Please answer with either 'Yes', 'No', 'I Don't Know', or 'Please Ask Again' only.`,
+        }),
       });
       
       const responseBody = await response.text();
@@ -70,5 +71,4 @@ async function handleQuestion() {
 }
 
 document.getElementById('askButton').addEventListener('click', handleQuestion);
-
 getRandomCard();
