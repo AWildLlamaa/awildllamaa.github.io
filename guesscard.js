@@ -19,7 +19,7 @@ function displayCard(data) {
 
 async function askQuestion(question) {
     try {
-      const prompt = `Given the information about the Magic the Gathering card "${cardData.name}" with attributes like color identity "${cardData.color_identity}" and type "${cardData.type_line}", answer this question about the card with either "Yes", "No", or "I didn't quite understand that. Please ask again." In the case of "Yes" or "No", only reply with a one-word answer: ${question}?`;
+        const prompt = `The Magic the Gathering card is "${cardData.name}" with attributes like color identity "${cardData.color_identity}" and type "${cardData.type_line}". ${question}? Answer with "Yes", "No", or "I don't know" only.`;
       
       const response = await fetch('/.netlify/functions/askChatGPT', {
         method: 'POST',
