@@ -36,16 +36,16 @@ exports.handler = async function(event, context) {
     const apiKey = process.env.CHATGPT_API_KEY;
 
     try {
-        const response = await fetch(`https://api.openai.com/v1/chat/completions`, {
+        const response = await fetch(`https://api.openai.com/v1/engines/davinci/completions`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: "davinci", // Add this line
-                prompt: question,
-                max_tokens: 150,
+                messages: [
+                    { "role": "user", "content": question }
+                ]
             }),
         });
 
@@ -58,7 +58,7 @@ exports.handler = async function(event, context) {
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ answer: data.choices[0].text.trim() }),
+            body: JSON.stringify({ answer: data.choices[0].message.content.trim() }), // Updated key path
         };
     } catch (error) {
         return {
