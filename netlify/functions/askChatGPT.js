@@ -32,18 +32,18 @@ exports.handler = async function(event, context) {
         };
     }
 
-    const { question, cardData } = payload;
+    const question = payload.question;
+    const cardData = payload.cardData;
     const apiKey = process.env.CHATGPT_API_KEY;
 
-    // Formatting the prompt
-    const formattedPrompt = `Please answer with either 'Yes', 'No', 'I Don't Know', or 'Please Ask Again' only. 
-    Given the Magic card with the following details:
-    - Name: ${cardData.name}
-    - Type: ${cardData.type_line}
-    - Set: ${cardData.set_name}
-    - Color Identity: ${cardData.color_identity.join(", ")}
-    - Description: ${cardData.oracle_text}
-    User question: ${question}`;
+    const formattedPrompt = `Please answer with either 'Yes', 'No', 'I Don't Know', or 'Please Ask Again' only. ---
+Given the Magic card with the following details:
+- Name: ${cardData.name}
+- Type: ${cardData.type_line}
+- Set: ${cardData.set_name}
+- Color Identity: ${cardData.color_identity.join(", ")}
+- Description: ${cardData.oracle_text}
+User question: ${question}`;
 
     try {
         const response = await fetch(`https://api.openai.com/v1/engines/davinci/completions`, {
@@ -54,7 +54,7 @@ exports.handler = async function(event, context) {
             },
             body: JSON.stringify({
                 prompt: formattedPrompt,
-                max_tokens: 50,  // Limiting the tokens as the expected answer is short.
+                max_tokens: 150,
             }),
         });
 
@@ -64,10 +64,12 @@ exports.handler = async function(event, context) {
         }        
 
         const data = await response.json();
+        const rawAnswer = data.choices[0].text.trim();
+        const finalAnswer = rawAnswer.split('---')[1].trim();
 
         return {
             statusCode: 200,
-            body: JSON.stringify({ answer: data.choices[0].text.trim() }),
+            body: JSON.stringify({ answer: finalAnswer }),
         };
     } catch (error) {
         return {
