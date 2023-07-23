@@ -13,40 +13,33 @@ async function getRandomCard() {
   }
 }
 
-// Function to display the Magic card information
-function displayCard(data) {
-  const cardImage = document.getElementById('cardImage');
-  cardImage.src = data.image_uris.normal;
-}
-
 // Function to ask a question to ChatGPT API
 async function askQuestion(question) {
-    try {
-      const apiKey = process.env.CHATGPT_API_KEY; // This line is not required anymore
-  
-      const response = await fetch(
-        `https://api.openai.com/v1/engines/davinci-codex/completions`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${apiKey}`, // Use the GitHub secret here
-          },
-          body: JSON.stringify({
-            prompt: question,
-            max_tokens: 150,
-          }),
-        }
-      );
-  
-      const data = await response.json();
-      return data.choices[0].text.trim();
-    } catch (error) {
-      console.error("Error fetching response from ChatGPT API:", error);
-      return "I'm sorry, I couldn't answer that question.";
-    }
-  }  
-  
+  try {
+    const apiKey = 'YOUR_API_KEY_PLACEHOLDER'; // Placeholder for the actual API key
+
+    const response = await fetch(
+      `https://api.openai.com/v1/engines/davinci-codex/completions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          prompt: question,
+          max_tokens: 150,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    return data.choices[0].text.trim();
+  } catch (error) {
+    console.error("Error fetching response from ChatGPT API:", error);
+    return "I'm sorry, I couldn't answer that question.";
+  }
+}
 
 // Function to handle user input and game flow
 async function handleQuestion() {
