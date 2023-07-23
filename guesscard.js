@@ -46,11 +46,6 @@ async function askQuestion(question) {
       const data = JSON.parse(responseBody);
       const answer = data.answer.trim();
   
-      const validAnswers = ["Yes", "No", "I Don't Know", "Please Ask Again"];
-      if (!validAnswers.includes(answer)) {
-        throw new Error('Received unexpected answer from OpenAI: ' + answer + '. Please ask again.');
-      }
-  
       return answer;
     } catch (error) {
       console.error('Error fetching response from ChatGPT API:', error);
