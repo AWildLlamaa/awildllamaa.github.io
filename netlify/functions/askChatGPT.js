@@ -34,7 +34,7 @@ exports.handler = async function(event, context) {
 
     const question = payload.question;
     const apiKey = process.env.CHATGPT_API_KEY;
-    const validAnswers = ["Yes", "No", "I Don't Know", "Please Ask Again"];
+    const validAnswers = ["Yes", "No", "I didn't quite understand that. Please ask again.", "Please Ask Again"];
 
     try {
         const response = await fetch(`https://api.openai.com/v1/engines/davinci/completions`, {
@@ -46,7 +46,7 @@ exports.handler = async function(event, context) {
             body: JSON.stringify({
                 prompt: question,
                 max_tokens: 150,
-                temperature: 0.10
+                temperature: 0.05
             }),
         });
 
